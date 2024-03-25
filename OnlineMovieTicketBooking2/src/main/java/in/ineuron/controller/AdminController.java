@@ -28,6 +28,7 @@ import in.ineuron.service.IMovieCastingService;
 import in.ineuron.service.IMovieService;
 import in.ineuron.service.IMovieUpdateService;
 import in.ineuron.utils.AdminLoginRequest;
+import in.ineuron.utils.AdminUtils;
 import in.ineuron.utils.MovieCastingUtil;
 
 @Controller
@@ -65,6 +66,7 @@ public class AdminController {
 		}
 		
 		return true;
+		//return AdminUtils.getSession();
 	}
 	
 	@GetMapping("/adminLogin")

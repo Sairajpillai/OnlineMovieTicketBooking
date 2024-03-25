@@ -11,5 +11,11 @@ public interface ICastingService {
 	public List<Casting> findAllCast();
 	
 	public Casting findById(Integer id);
+	
+	public List<Casting> findCastingsByName(String name);
+	
+	public Casting findCastingByName(String name);
+	
+	public String deleteCastingByCasting(Casting casting);
 
 }

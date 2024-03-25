@@ -43,4 +43,25 @@ public class CastingServiceImpl implements ICastingService {
 		return casting.get();
 	}
 
+	@Override
+	public List<Casting> findCastingsByName(String name) {
+		List<Casting> castings = repo.findByActor(name);
+		return castings;
+	}
+
+	@Override
+	public Casting findCastingByName(String name) {
+		return repo.findByActorName(name);
+	}
+
+	@Override
+	public String deleteCastingByCasting(Casting casting) {
+		try {
+            repo.delete(casting);
+            return "success";
+        } catch (Exception e) {
+            return "Error deleting MovieCasting entities: " + e.getMessage();
+        }
+	}
+
 }

@@ -22,9 +22,9 @@
 </div>
 <div class="box-container">
     <div class="box1"><a href="${pageContext.request.contextPath}/casting/addCasting">Add Casting</a></div>
-    <div class="box1"><a href="../JSP/Admin/SearchDepartment.jsp">Search Department</a></div>
-    <div class="box1"><a href="../JSP/Admin/UpdateDepartment.jsp">Update Department</a></div>
-    <div class="box1"><a href="../JSP/Admin/DeleteDepartment.jsp">Delete Department</a></div>
+    <div class="box1"><a href="${pageContext.request.contextPath}/casting/searchCasting">Search Casting</a></div>
+    <div class="box1"><a href="${pageContext.request.contextPath}/casting/updateCasting">Update Casting</a></div>
+    <div class="box1"><a href="${pageContext.request.contextPath}/casting/deleteCasting">Delete Casting</a></div>
 </div>
  <c:if test="${saveResult ne null}">
             <!--  <p style="color: red;">Invalid Username or Password</p>-->
@@ -66,6 +66,24 @@
             <!--  <p style="color: red;">Invalid Username or Password</p>-->
              <div id="notification" class="notification-container">
         <span class="notification-text">Movie Deleted Successfully</span>
+        <span class="notification-close" onclick="closeNotification()">×</span>
+    </div>
+
+    <script>
+        function closeNotification() {
+            var notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+        setTimeout(function () {
+            closeNotification();
+        }, 4000);
+    </script>
+        </c:if>
+        
+        <c:if test="${castingDeleteStatus ne null}">
+            <!--  <p style="color: red;">Invalid Username or Password</p>-->
+             <div id="notification" class="notification-container">
+        <span class="notification-text">Casting Deleted Successfully</span>
         <span class="notification-close" onclick="closeNotification()">×</span>
     </div>
 
