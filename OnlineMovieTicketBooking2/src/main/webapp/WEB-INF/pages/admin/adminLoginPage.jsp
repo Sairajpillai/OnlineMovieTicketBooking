@@ -173,6 +173,23 @@
         }, 3000);
     </script>
         </c:if>
+        <c:if test="${isAdminLogout eq true}">
+            <!--  <p style="color: red;">Invalid Username or Password</p>-->
+             <div id="notification" class="notification-container">
+        <span class="notification-text">Logged Out successfully</span>
+        <span class="notification-close" onclick="closeNotification()">×</span>
+    </div>
+
+    <script>
+        function closeNotification() {
+            var notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+        setTimeout(function () {
+            closeNotification();
+        }, 3000);
+    </script>
+        </c:if>
         </form:form>
     </div>
     

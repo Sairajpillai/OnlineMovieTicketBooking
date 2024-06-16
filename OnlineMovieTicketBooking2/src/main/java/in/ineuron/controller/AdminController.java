@@ -22,11 +22,13 @@ import in.ineuron.model.Casting;
 import in.ineuron.model.Movie;
 import in.ineuron.model.MovieCasting;
 import in.ineuron.model.MovieUpdate;
+import in.ineuron.model.Owner;
 import in.ineuron.service.IAdminService;
 import in.ineuron.service.ICastingService;
 import in.ineuron.service.IMovieCastingService;
 import in.ineuron.service.IMovieService;
 import in.ineuron.service.IMovieUpdateService;
+import in.ineuron.service.IOwnerService;
 import in.ineuron.utils.AdminLoginRequest;
 import in.ineuron.utils.AdminUtils;
 import in.ineuron.utils.MovieCastingUtil;
@@ -55,6 +57,9 @@ public class AdminController {
 	
 	@Autowired
 	private IMovieUpdateService mus;
+	
+	@Autowired
+	private IOwnerService ows;
 	
 	//private HttpSession session;
 	
@@ -414,9 +419,172 @@ public class AdminController {
 		}
 	}
 	
+	@GetMapping("/adminLogout")
+	public String adminLogout(Map<String,Object> model,HttpSession session) {
+		if(isLoggedIn()) {
+			session.invalidate();
+			System.out.println(session+"inside logout");
+			session=null;
+			System.out.println(session+"inside logout after null");
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdminLogout", true);
+			return "admin/adminLoginPage";
+		    // return null;
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "redirect:/admin/adminLogin";
+		}
+	}
 	
+	@GetMapping("/adminAddTheatreOwner")
+	public String addTheatreOwnerForm(Map<String,Object> model,HttpSession session) {
+		if(isLoggedIn()) {
+			Owner owner = new Owner();
+			model.put("owner", owner);
+			return "owner/adminOwnerAdd";
+		    // return null;
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "redirect:/admin/adminLogin";
+		}
+	}
 	
+	@PostMapping("/addTheatreOwner")
+	public String addTheatreOwner(Map<String,Object> model,@ModelAttribute Owner owner,HttpSession session) {
+		if(isLoggedIn()) {
+			Admin admin = (Admin) httpSession.getAttribute("admin");
+			owner.setAdmin(admin);
+			//System.out.println(owner);
+			Owner saveOwner = ows.saveOwner(owner);
+			//System.out.println(saveOwner);
+			String saveResult = "Owner saved with the id : "+saveOwner.getOid();
+			model.put("saveResult",saveResult);
+			return "admin/adminHomePage";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "redirect:/admin/adminLogin";
+		}
+	}
 	
+	@GetMapping("/searchOwner")
+	public String searchOwnerForm(Map<String,Object> model) {
+		if(isLoggedIn()) {
+			
+			return "admin/adminSearchOwner";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "admin/adminLoginPage";
+		}
+	}
+	
+	@PostMapping("/searchOwnerForm")
+	public String searchOwner(@RequestParam("owneremail") String ownerEmail,Map<String,Object> model) {
+		if(isLoggedIn()) {
+			Owner owner = ows.findOwnerByemail(ownerEmail);
+			//System.out.println(owner);
+			model.put("owner", owner);
+			return "admin/adminSearchOwnerResult";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "admin/adminLoginPage";
+		}
+	}
+	
+	@GetMapping("/updateOwnerForm")
+	public String updateOwnerForm(Map<String,Object> model) {
+		if(isLoggedIn()) {
+			return "admin/adminOwnerUpdatePage";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "admin/adminLoginPage";
+		}
+	}
+	
+	@PostMapping("/updateOwner")
+	public String updateOwnerController(@RequestParam("ownerEmail") String ownerEmail, Map<String,Object> model) {
+		if(isLoggedIn()) {
+		Owner owner = ows.findOwnerByemail(ownerEmail);
+		model.put("owner", owner);
+		return "admin/adminOwnerUpdatePageResult";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "admin/adminLoginPage";
+		}
+	}
+	
+	@PostMapping("/updateOwnerDetails")
+	public String updateOwnerDetails(@ModelAttribute Owner owner,Map<String,Object> model) {
+		if(isLoggedIn()) {
+			//System.out.println("Inside update owner"+owner);
+			Admin admin = (Admin) httpSession.getAttribute("admin");
+			owner.setAdmin(admin);
+			Owner ownerUpdated = ows.saveOwner(owner);
+			model.put("ownerUpdatedResult","success");
+			return "admin/adminHomePage";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "admin/adminLoginPage";
+		}
+	}
+	
+	@GetMapping("/ownerDeletePage")
+	public String deleteOwnerPage(Map<String,Object> model) {
+		if(isLoggedIn()) {
+			return "admin/adminOwnerDeletePage";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "admin/adminLoginPage";
+		}
+	}
+	
+	@PostMapping("/deleteOwnerController")
+	public String deleteOwner(@RequestParam("ownerEmail") String ownerEmail,Map<String,Object> model) {
+		if(isLoggedIn()) {
+			Owner owner = ows.findOwnerByemail(ownerEmail);
+			model.put("owner", owner);
+			return "admin/adminOwnerDeletePageResult";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "admin/adminLoginPage";
+		}
+	}
+	
+	@PostMapping("/deleteOwner")
+	public String deleteOwnercontroller(@ModelAttribute Owner owner,Map<String,Object> model) {
+		if(isLoggedIn()) {
+			String ownerDeleteStatus="failure";
+			ownerDeleteStatus = ows.deleteOwnerByOwner(owner);
+			
+			model.put("ownerDeleteStatus", ownerDeleteStatus);
+			return "admin/adminHomePage";
+		}else {
+			AdminLoginRequest adminLogin = new AdminLoginRequest();
+			model.put("adminLogin", adminLogin);
+			model.put("isAdmin", "sessionExpired");
+			return "admin/adminLoginPage";
+		}
+	}
 	
 
 } 

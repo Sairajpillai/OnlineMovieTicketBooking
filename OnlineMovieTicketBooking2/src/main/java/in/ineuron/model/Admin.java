@@ -45,6 +45,9 @@ public class Admin {
 	
 	@OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
 	private List<Casting> castings;
+	
+	@OneToMany(mappedBy = "admin", cascade = CascadeType.ALL)
+	private List<Owner> owners;
 
 //	@Override
 //	public String toString() {

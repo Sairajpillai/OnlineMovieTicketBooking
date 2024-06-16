@@ -26,6 +26,12 @@
     <div class="box1"><a href="${pageContext.request.contextPath}/casting/updateCasting">Update Casting</a></div>
     <div class="box1"><a href="${pageContext.request.contextPath}/casting/deleteCasting">Delete Casting</a></div>
 </div>
+<div class="box-container">
+    <div class="box2"><a href="${pageContext.request.contextPath}/admin/adminAddTheatreOwner">Add Owner</a></div>
+    <div class="box2"><a href="${pageContext.request.contextPath}/admin/searchOwner">Search Owner</a></div>
+    <div class="box2"><a href="${pageContext.request.contextPath}/admin/updateOwnerForm">Update Owner</a></div>
+    <div class="box2"><a href="${pageContext.request.contextPath}/admin/ownerDeletePage">Delete Owner</a></div>
+</div>
  <c:if test="${saveResult ne null}">
             <!--  <p style="color: red;">Invalid Username or Password</p>-->
              <div id="notification" class="notification-container">
@@ -84,6 +90,42 @@
             <!--  <p style="color: red;">Invalid Username or Password</p>-->
              <div id="notification" class="notification-container">
         <span class="notification-text">Casting Deleted Successfully</span>
+        <span class="notification-close" onclick="closeNotification()">×</span>
+    </div>
+
+    <script>
+        function closeNotification() {
+            var notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+        setTimeout(function () {
+            closeNotification();
+        }, 4000);
+    </script>
+        </c:if>
+        
+        <c:if test="${ownerUpdatedResult ne null}">
+            <!--  <p style="color: red;">Invalid Username or Password</p>-->
+             <div id="notification" class="notification-container">
+        <span class="notification-text">Owner Updated Successfully</span>
+        <span class="notification-close" onclick="closeNotification()">×</span>
+    </div>
+
+    <script>
+        function closeNotification() {
+            var notification = document.getElementById('notification');
+            notification.style.display = 'none';
+        }
+        setTimeout(function () {
+            closeNotification();
+        }, 4000);
+    </script>
+        </c:if>
+        
+        <c:if test="${ownerDeleteStatus ne null}">
+            <!--  <p style="color: red;">Invalid Username or Password</p>-->
+             <div id="notification" class="notification-container">
+        <span class="notification-text">Owner Deleted Successfully</span>
         <span class="notification-close" onclick="closeNotification()">×</span>
     </div>
 
